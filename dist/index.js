@@ -261,6 +261,7 @@ function hasWhiteSpace(s) {
 
 
 var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, accessorToTypeMap) {
+  var addNulls = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
   Object.entries(obj).forEach(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
         key = _ref2[0],
@@ -277,7 +278,7 @@ var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, ac
     if (!valid_keys_arr.includes(new_key)) delete obj[new_key];else obj[new_key] = convertToType(val, accessorToTypeMap[new_key]);
   });
 
-  if (!(0, _lodash.isEmpty)(obj)) {
+  if (!(0, _lodash.isEmpty)(obj) && addNulls) {
     // Add null to missing keys
     var keysToNullify = valid_keys_arr.filter(function (x) {
       return !(x in obj);

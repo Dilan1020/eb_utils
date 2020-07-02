@@ -195,7 +195,7 @@ function hasWhiteSpace(s) {
     
     will return an empty object if there are no valid keys
 */
-export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap) => {
+export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, addNulls = true) => {
     Object.entries(obj).forEach(([key, val]) => {
         let new_key = key;
         if (hasWhiteSpace(key) || key.toLowerCase() !== key) {
@@ -208,7 +208,7 @@ export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap) => 
         else obj[new_key] = convertToType(val, accessorToTypeMap[new_key]);
     });
 
-    if (!isEmpty(obj))
+    if (!isEmpty(obj) && addNulls)
     {
         // Add null to missing keys
         let keysToNullify = valid_keys_arr.filter(x => !(x in obj));
