@@ -181,6 +181,7 @@ export function transformValue(initialValue, easybaseType, tranformTo) {
     }
 }
 
+export const normalizeAccessorName = given_key => given_key.toLowerCase().trim().replace(/ /g, '_');
 
 function hasWhiteSpace(s) {
     const whitespaceChars = [' ', '\t', '\n'];
@@ -199,7 +200,7 @@ export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, add
     Object.entries(obj).forEach(([key, val]) => {
         let new_key = key;
         if (hasWhiteSpace(key) || key.toLowerCase() !== key) {
-            new_key = key.toLowerCase().trim().replace(/ /g, '_');
+            new_key = normalizeAccessorName(key);
             delete obj[key];
             obj[new_key] = val;
         }

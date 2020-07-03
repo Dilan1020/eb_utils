@@ -9,7 +9,7 @@ exports.convertTimeHHMMToMinutes = convertTimeHHMMToMinutes;
 exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
 exports.transformValue = transformValue;
-exports.normalizeObjectForDB = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
+exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
 
 var _dayjs = _interopRequireDefault(require("dayjs"));
 
@@ -244,6 +244,12 @@ function transformValue(initialValue, easybaseType, tranformTo) {
   }
 }
 
+var normalizeAccessorName = function normalizeAccessorName(given_key) {
+  return given_key.toLowerCase().trim().replace(/ /g, '_');
+};
+
+exports.normalizeAccessorName = normalizeAccessorName;
+
 function hasWhiteSpace(s) {
   var whitespaceChars = [' ', '\t', '\n'];
   return whitespaceChars.some(function (_char) {
@@ -270,7 +276,7 @@ var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, ac
     var new_key = key;
 
     if (hasWhiteSpace(key) || key.toLowerCase() !== key) {
-      new_key = key.toLowerCase().trim().replace(/ /g, '_');
+      new_key = normalizeAccessorName(key);
       delete obj[key];
       obj[new_key] = val;
     }
