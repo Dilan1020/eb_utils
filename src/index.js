@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { isFinite, isString, isNumber, isEmpty } from 'lodash';
+import { isFinite, isString, isNumber, isEmpty, capitalize } from 'lodash';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
 
@@ -42,7 +42,7 @@ export const checkStringForDatabase = (potential_name) => {
     if (potential_name.length > 20)
         return "Names cannot be longer 20 characters"
     if (!alphanumericWithSpaceHyphen.test(potential_name))
-        return "Names can only contain a-Z, 0-9, ' ', _";
+        return "Names can only contain a-Z, 0-9, ' ', -";
     if (potential_name.trim().toUpperCase() === 'CHECKBOX')
         return "Cannot have name 'Checkbox'";
     if (potential_name.trim().toUpperCase() === 'LIMIT')
@@ -180,6 +180,8 @@ export function transformValue(initialValue, easybaseType, tranformTo) {
             break;
     }
 }
+
+export const accessorNameToColumnName = given_key => capitalize(given_key.replace(/_/g, ' '))
 
 export const normalizeAccessorName = given_key => given_key.toLowerCase().trim().replace(/ /g, '_');
 

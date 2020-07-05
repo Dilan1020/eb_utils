@@ -9,7 +9,7 @@ exports.convertTimeHHMMToMinutes = convertTimeHHMMToMinutes;
 exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
 exports.transformValue = transformValue;
-exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
+exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
 
 var _dayjs = _interopRequireDefault(require("dayjs"));
 
@@ -82,7 +82,7 @@ var checkStringForDatabase = function checkStringForDatabase(potential_name) {
   if (potential_name.includes("_")) return "Cannot have '_' in name, use '-' instead";
   if (potential_name.trim() === '') return "Cannot have empty name";
   if (potential_name.length > 20) return "Names cannot be longer 20 characters";
-  if (!alphanumericWithSpaceHyphen.test(potential_name)) return "Names can only contain a-Z, 0-9, ' ', _";
+  if (!alphanumericWithSpaceHyphen.test(potential_name)) return "Names can only contain a-Z, 0-9, ' ', -";
   if (potential_name.trim().toUpperCase() === 'CHECKBOX') return "Cannot have name 'Checkbox'";
   if (potential_name.trim().toUpperCase() === 'LIMIT') return "Cannot have name 'Limit'";
   if (potential_name.trim().toUpperCase() === 'OFFSET') return "Cannot have name 'Offset'";
@@ -243,6 +243,12 @@ function transformValue(initialValue, easybaseType, tranformTo) {
       break;
   }
 }
+
+var accessorNameToColumnName = function accessorNameToColumnName(given_key) {
+  return (0, _lodash.capitalize)(given_key.replace(/_/g, ' '));
+};
+
+exports.accessorNameToColumnName = accessorNameToColumnName;
 
 var normalizeAccessorName = function normalizeAccessorName(given_key) {
   return given_key.toLowerCase().trim().replace(/ /g, '_');
