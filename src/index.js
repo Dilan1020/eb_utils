@@ -220,3 +220,5 @@ export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, add
     
     return obj;
 }
+
+export const HASH_PLACEHOLDER = "??????????";

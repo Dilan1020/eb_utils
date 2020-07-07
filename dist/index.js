@@ -9,7 +9,7 @@ exports.convertTimeHHMMToMinutes = convertTimeHHMMToMinutes;
 exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
 exports.transformValue = transformValue;
-exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
+exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
 
 var _dayjs = _interopRequireDefault(require("dayjs"));
 
@@ -315,3 +315,5 @@ var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, ac
 };
 
 exports.normalizeObjectForDB = normalizeObjectForDB;
+var HASH_PLACEHOLDER = "??????????";
+exports.HASH_PLACEHOLDER = HASH_PLACEHOLDER;
