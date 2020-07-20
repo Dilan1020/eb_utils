@@ -320,14 +320,14 @@ exports.HASH_PLACEHOLDER = HASH_PLACEHOLDER;
 
 var createMongoSearchQuery = function createMongoSearchQuery(column_accessors, search_str) {
   var matchOrOptions = [];
-  column_accessors.splice(1).forEach(function (ele) {
+  column_accessors.forEach(function (ele) {
     var new_obj = {};
     new_obj[ele] = new RegExp(search_str, "i");
     matchOrOptions.push(new_obj);
   });
 
   if ((0, _lodash.isNumber)(search_str)) {
-    column_accessors.splice(1).forEach(function (ele) {
+    column_accessors.forEach(function (ele) {
       var new_obj = {};
       new_obj[ele] = {
         $eq: Number(search_str)

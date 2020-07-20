@@ -225,14 +225,14 @@ export const HASH_PLACEHOLDER = "??????????";
 
 export const createMongoSearchQuery = (column_accessors, search_str) => {
     const matchOrOptions = [];
-    column_accessors.splice(1).forEach(ele => {
+    column_accessors.forEach(ele => {
         const new_obj = {};
         new_obj[ele] = new RegExp(search_str, "i");
         matchOrOptions.push(new_obj);
     })
 
     if (isNumber(search_str)) {
-        column_accessors.splice(1).forEach(ele => {
+        column_accessors.forEach(ele => {
             const new_obj = {};
             new_obj[ele] = { $eq: Number(search_str) };
             matchOrOptions.push(new_obj);
