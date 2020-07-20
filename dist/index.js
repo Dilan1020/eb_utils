@@ -9,7 +9,7 @@ exports.convertTimeHHMMToMinutes = convertTimeHHMMToMinutes;
 exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
 exports.transformValue = transformValue;
-exports.createMongoSearchAgg = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
+exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
 
 var _dayjs = _interopRequireDefault(require("dayjs"));
 
@@ -318,7 +318,7 @@ exports.normalizeObjectForDB = normalizeObjectForDB;
 var HASH_PLACEHOLDER = "??????????";
 exports.HASH_PLACEHOLDER = HASH_PLACEHOLDER;
 
-var createMongoSearchAgg = function createMongoSearchAgg(column_accessors, search_str) {
+var createMongoSearchQuery = function createMongoSearchQuery(column_accessors, search_str) {
   var matchOrOptions = [];
   column_accessors.splice(1).forEach(function (ele) {
     var new_obj = {};
@@ -341,4 +341,4 @@ var createMongoSearchAgg = function createMongoSearchAgg(column_accessors, searc
   };
 };
 
-exports.createMongoSearchAgg = createMongoSearchAgg;
+exports.createMongoSearchQuery = createMongoSearchQuery;

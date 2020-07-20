@@ -223,7 +223,7 @@ export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, add
 
 export const HASH_PLACEHOLDER = "??????????";
 
-export const createMongoSearchAgg = (column_accessors, search_str) => {
+export const createMongoSearchQuery = (column_accessors, search_str) => {
     const matchOrOptions = [];
     column_accessors.splice(1).forEach(ele => {
         const new_obj = {};
