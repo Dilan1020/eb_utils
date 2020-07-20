@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+createMongoSearchAggimport dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { isFinite, isString, isNumber, isEmpty, capitalize } from 'lodash';
 
@@ -222,3 +222,24 @@ export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, add
 }
 
 export const HASH_PLACEHOLDER = "??????????";
+
+export const createMongoSearchAgg = (column_accessors, search_str) => {
+    const matchOrOptions = [];
+    column_accessors.splice(1).forEach(ele => {
+        const new_obj = {};
+        new_obj[ele] = new RegExp(search_str, "i");
+        matchOrOptions.push(new_obj);
+    })
+
+    if (isNumber(search_str)) {
+        column_accessors.splice(1).forEach(ele => {
+            const new_obj = {};
+            new_obj[ele] = { $eq: Number(search_str) };
+            matchOrOptions.push(new_obj);
+        })
+    }
+
+    return [{
+        $match: { $or: matchOrOptions }
+    }];
+}
