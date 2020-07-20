@@ -336,11 +336,9 @@ var createMongoSearchAgg = function createMongoSearchAgg(column_accessors, searc
     });
   }
 
-  return [{
-    $match: {
-      $or: matchOrOptions
-    }
-  }];
+  return {
+    $or: matchOrOptions
+  };
 };
 
 exports.createMongoSearchAgg = createMongoSearchAgg;

@@ -239,7 +239,5 @@ export const createMongoSearchAgg = (column_accessors, search_str) => {
         })
     }
 
-    return [{
-        $match: { $or: matchOrOptions }
-    }];
+    return { $or: matchOrOptions };
 }
