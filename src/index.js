@@ -1,4 +1,4 @@
-createMongoSearchAggimport dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { isFinite, isString, isNumber, isEmpty, capitalize } from 'lodash';
 
