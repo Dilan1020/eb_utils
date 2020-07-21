@@ -51,6 +51,14 @@ export const checkStringForDatabase = (potential_name) => {
         return "Cannot have name 'Offset'";
     if (potential_name.trim().toUpperCase() === 'INSERTATEND')
         return "Cannot have name 'INSERTATEND'";
+    if (potential_name.trim().toUpperCase() === 'SEARCHSTRING')
+        return "Cannot have name 'SearchString'";
+    if (potential_name.trim().toUpperCase() === 'ORDER')
+        return "Cannot have name 'Order'";
+    if (potential_name.trim().toUpperCase() === 'JUSTCOLUMNS')
+        return "Cannot have name 'JustColumns'";
+    if (!isNaN(parseFloat(potential_name.trim())) && isFinite(+(potential_name.trim())))
+        return "Cannot have numeric name"
     else return true;
 }
 

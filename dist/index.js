@@ -86,7 +86,11 @@ var checkStringForDatabase = function checkStringForDatabase(potential_name) {
   if (potential_name.trim().toUpperCase() === 'CHECKBOX') return "Cannot have name 'Checkbox'";
   if (potential_name.trim().toUpperCase() === 'LIMIT') return "Cannot have name 'Limit'";
   if (potential_name.trim().toUpperCase() === 'OFFSET') return "Cannot have name 'Offset'";
-  if (potential_name.trim().toUpperCase() === 'INSERTATEND') return "Cannot have name 'INSERTATEND'";else return true;
+  if (potential_name.trim().toUpperCase() === 'INSERTATEND') return "Cannot have name 'INSERTATEND'";
+  if (potential_name.trim().toUpperCase() === 'SEARCHSTRING') return "Cannot have name 'SearchString'";
+  if (potential_name.trim().toUpperCase() === 'ORDER') return "Cannot have name 'Order'";
+  if (potential_name.trim().toUpperCase() === 'JUSTCOLUMNS') return "Cannot have name 'JustColumns'";
+  if (!isNaN(parseFloat(potential_name.trim())) && (0, _lodash.isFinite)(+potential_name.trim())) return "Cannot have numeric name";else return true;
 };
 
 exports.checkStringForDatabase = checkStringForDatabase;
