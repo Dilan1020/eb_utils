@@ -215,6 +215,7 @@ export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, add
             obj[new_key] = val;
         }
 
+        console.log("val: ", val, "accessorToTypeMap: ", accessorToTypeMap[new_key], "new key: ", new_key);
         if (!valid_keys_arr.includes(new_key)) delete obj[new_key];
         else obj[new_key] = convertToType(val, accessorToTypeMap[new_key]);
     });
