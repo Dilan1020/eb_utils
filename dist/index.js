@@ -134,7 +134,7 @@ function convertToType(initialValue, easybaseType) {
     case "image":
     case "video":
     case "file":
-      return null;
+      return "".concat(initialValue);
 
     default:
       break;
