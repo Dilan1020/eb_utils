@@ -93,7 +93,7 @@ export function convertToType(initialValue, easybaseType) {
         case "image":
         case "video":
         case "file":
-            return null;
+            return `${initialValue}`;
         default:
             break;
     }
