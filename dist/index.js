@@ -359,22 +359,25 @@ function hashBuilder(_x) {
 }
 
 function _hashBuilder() {
-  _hashBuilder = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(inputArr) {
-    var fileExtension,
+  _hashBuilder = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(inputsToHash) {
+    var inputsToNotHash,
         final_string,
         _iterator2,
         _step2,
         curr_in,
         res,
+        _iterator3,
+        _step3,
+        _curr_in,
         _args = arguments;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            fileExtension = _args.length > 1 && _args[1] !== undefined ? _args[1] : false;
+            inputsToNotHash = _args.length > 1 && _args[1] !== undefined ? _args[1] : [];
             final_string = "";
-            _iterator2 = _createForOfIteratorHelper(inputArr);
+            _iterator2 = _createForOfIteratorHelper(inputsToHash);
             _context.prev = 3;
 
             _iterator2.s();
@@ -416,10 +419,22 @@ function _hashBuilder() {
 
           case 21:
             final_string = final_string.slice(0, -1);
-            if (fileExtension) final_string += fileExtension;
+            _iterator3 = _createForOfIteratorHelper(inputsToNotHash);
+
+            try {
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                _curr_in = _step3.value;
+                final_string += _curr_in;
+              }
+            } catch (err) {
+              _iterator3.e(err);
+            } finally {
+              _iterator3.f();
+            }
+
             return _context.abrupt("return", final_string);
 
-          case 24:
+          case 25:
           case "end":
             return _context.stop();
         }
