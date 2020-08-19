@@ -255,9 +255,8 @@ export async function hashBuilder(inputsToHash, inputsToNotHash = []) {
     let final_string = "";
     for (const curr_in of inputsToHash) {
         const res = await sha256(curr_in);
-        final_string += res.slice(0, 10) + "_";
+        final_string += res.slice(0, 9);
     }
-    final_string = final_string.slice(0, -1);
 
     for (const curr_in of inputsToNotHash) {
         final_string += curr_in;

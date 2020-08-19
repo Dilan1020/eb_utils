@@ -394,7 +394,7 @@ function _hashBuilder() {
 
           case 9:
             res = _context.sent;
-            final_string += res.slice(0, 10) + "_";
+            final_string += res.slice(0, 9);
 
           case 11:
             _context.next = 5;
@@ -418,7 +418,6 @@ function _hashBuilder() {
             return _context.finish(18);
 
           case 21:
-            final_string = final_string.slice(0, -1);
             _iterator3 = _createForOfIteratorHelper(inputsToNotHash);
 
             try {
@@ -434,7 +433,7 @@ function _hashBuilder() {
 
             return _context.abrupt("return", final_string);
 
-          case 25:
+          case 24:
           case "end":
             return _context.stop();
         }
