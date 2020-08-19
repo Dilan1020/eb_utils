@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { isFinite, isString, isNumber, isEmpty, capitalize } from 'lodash';
+import { sha256 } from 'crypto-hash';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
 
@@ -248,4 +249,15 @@ export const createMongoSearchQuery = (column_accessors, search_str) => {
     }
 
     return { $or: matchOrOptions };
+}
+
+export async function hashBuilder(inputArr, fileExtension = false) {
+    let final_string = "";
+    for (const curr_in of inputArr) {
+        const res = await sha256(curr_in);
+        final_string += res.slice(0, 10) + "_";
+    }
+    final_string = final_string.slice(0, -1);
+    if (fileExtension) final_string += fileExtension;
+    return final_string;
 }
