@@ -146,12 +146,15 @@ function convertTimeHHMMToMinutes(timeString) {
   var durArr = timeString.split(':');
   var hours = Number(durArr[0].match(/\d+/));
   var mintues = Number(durArr[1].match(/\d+/));
+  var bareMins = hours * 60 + mintues;
 
   if ("".concat(timeString).toUpperCase().includes("PM")) {
-    return hours * 60 + mintues + 12 * 60;
+    if (hours === 12) return bareMins;else return bareMins + 12 * 60;
+  } else if ("".concat(timeString).toUpperCase().includes("AM")) {
+    if (hours === 12) return mintues; // 12 AM denotes midnight
+    else return bareMins;
   } else {
-    // Includes AM
-    return hours * 60 + mintues;
+    return bareMins;
   }
 }
 
