@@ -103,7 +103,7 @@ export function convertToType(initialValue, easybaseType) {
 export function convertTimeHHMMToMinutes(timeString) {
 
     const durArr = timeString.split(':');
-    const hours = Number(durArr[0].replace(/(^.+)(\w\d+\w)(.+$)/i, '$2'));
+    const hours = Number(durArr[0].replace(/(^.+)(\w\d+\w)(.+$)/i, '$1'));
     const mintues = Number(durArr[0].replace(/(^.+)(\w\d+\w)(.+$)/i, '$2'));
 
     if (`${timeString}`.toUpperCase().includes("PM")) {

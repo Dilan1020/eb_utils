@@ -144,7 +144,7 @@ function convertToType(initialValue, easybaseType) {
 
 function convertTimeHHMMToMinutes(timeString) {
   var durArr = timeString.split(':');
-  var hours = Number(durArr[0].replace(/(^.+)(\w\d+\w)(.+$)/i, '$2'));
+  var hours = Number(durArr[0].replace(/(^.+)(\w\d+\w)(.+$)/i, '$1'));
   var mintues = Number(durArr[0].replace(/(^.+)(\w\d+\w)(.+$)/i, '$2'));
 
   if ("".concat(timeString).toUpperCase().includes("PM")) {
