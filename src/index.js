@@ -149,6 +149,8 @@ export function transformValue(initialValue, easybaseType, tranformTo) {
                     return convertMinsToHrsMins12(initialValue);
                 case 'HH:MM 24h':
                     return convertMinsToHrsMins24(initialValue);
+                case 'Total Minutes':
+                    return Number(initialValue);
                 default:
                     break;
             }
