@@ -271,3 +271,24 @@ export async function hashBuilder(inputsToHash, inputsToNotHash = []) {
     }
     return final_string;
 }
+
+export async function getTableNames(db) {
+    const collectionNames = [];
+
+    const currCollectionNames = await db.listCollections({}, { nameOnly: true }).toArray();
+    if (currCollectionNames !== undefined && currCollectionNames.length !== 0) {
+        const _filtered_names = currCollectionNames.reduce((newArr, ele) => {
+            if (!ele.name.includes('.')) newArr.push(ele.name)
+            return newArr
+        }, []);
+        collectionNames.push(..._filtered_names);
+    }
+
+    return collectionNames;
+}
+
+
+export function roundToDecimal(number, places) {
+    const multiplier = Math.pow(10, places); // For our example the multiplier will be 10 * 10 * 10 = 1000.
+    return Math.round(number * multiplier) / multiplier;
+}

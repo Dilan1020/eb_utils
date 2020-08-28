@@ -12,7 +12,11 @@ exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
 exports.transformValue = transformValue;
 exports.hashBuilder = hashBuilder;
+exports.getTableNames = getTableNames;
+exports.roundToDecimal = roundToDecimal;
 exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -441,4 +445,51 @@ function _hashBuilder() {
     }, _callee, null, [[3, 15, 18, 21]]);
   }));
   return _hashBuilder.apply(this, arguments);
+}
+
+function getTableNames(_x2) {
+  return _getTableNames.apply(this, arguments);
+}
+
+function _getTableNames() {
+  _getTableNames = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(db) {
+    var collectionNames, currCollectionNames, _filtered_names;
+
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            collectionNames = [];
+            _context2.next = 3;
+            return db.listCollections({}, {
+              nameOnly: true
+            }).toArray();
+
+          case 3:
+            currCollectionNames = _context2.sent;
+
+            if (currCollectionNames !== undefined && currCollectionNames.length !== 0) {
+              _filtered_names = currCollectionNames.reduce(function (newArr, ele) {
+                if (!ele.name.includes('.')) newArr.push(ele.name);
+                return newArr;
+              }, []);
+              collectionNames.push.apply(collectionNames, (0, _toConsumableArray2["default"])(_filtered_names));
+            }
+
+            return _context2.abrupt("return", collectionNames);
+
+          case 6:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _getTableNames.apply(this, arguments);
+}
+
+function roundToDecimal(number, places) {
+  var multiplier = Math.pow(10, places); // For our example the multiplier will be 10 * 10 * 10 = 1000.
+
+  return Math.round(number * multiplier) / multiplier;
 }
