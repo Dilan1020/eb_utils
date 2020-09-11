@@ -14,7 +14,7 @@ exports.transformValue = transformValue;
 exports.hashBuilder = hashBuilder;
 exports.getTableNames = getTableNames;
 exports.roundToDecimal = roundToDecimal;
-exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = void 0;
+exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = exports.pullNumberFromString = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -43,6 +43,12 @@ try {
 } catch (e) {
   _dayjs["default"].extend(_utc["default"]);
 }
+
+var pullNumberFromString = function pullNumberFromString(in_str) {
+  return (0, _lodash.isString)(in_str) ? Number(in_str.replace(/\D/g, "")) : 0;
+};
+
+exports.pullNumberFromString = pullNumberFromString;
 
 var clearObject = function clearObject(obj) {
   Object.keys(obj).forEach(function (k) {
@@ -131,10 +137,11 @@ function convertToType(initialValue, easybaseType) {
       return new Date(initialValue);
 
     case "location":
-      return {
+      if ((0, _lodash.isString)(initialValue)) return {
         type: "Point",
-        coordinates: [initialValue.split(",")[0], initialValue.split(",")[1]]
-      };
+        coordinates: [pullNumberFromString(initialValue.split(",")[0]), pullNumberFromString(initialValue.split(",")[1])]
+      };else if ((0, _lodash.isObject)(initialValue)) return initialValue;else if ((0, _lodash.isArray)(initialValue) && initialValue.length >= 2) return [Number(initialValue[0]), Number(initialValue[1])];
+      break;
 
     case "image":
     case "video":
@@ -182,7 +189,7 @@ function convertMinsToHrsMins24(mins) {
 }
 
 function transformValue(initialValue, easybaseType, tranformTo) {
-  // TODO: Finish these (richtext)
+  // TODO: Finish these (richtext, location)
   switch (easybaseType) {
     case "time":
       switch (tranformTo) {

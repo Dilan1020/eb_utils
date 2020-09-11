@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { isFinite, isString, isNumber, isEmpty, capitalize } from 'lodash';
+import { isFinite, isString, isNumber, isEmpty, capitalize, isObject, isArray } from 'lodash';
 import { sha256 } from 'crypto-hash';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
+
+export const pullNumberFromString = (in_str) => isString(in_str) ? Number(in_str.replace(/\D/g, "")) : 0;
 
 export const clearObject = (obj) => {
     Object.keys(obj).forEach(k => delete obj[k]);
@@ -90,7 +92,13 @@ export function convertToType(initialValue, easybaseType) {
         case "date":
             return new Date(initialValue);
         case "location":
-            return { type: "Point", coordinates: [initialValue.split(",")[0], initialValue.split(",")[1]] };
+            if (isString(initialValue))
+                return { type: "Point", coordinates: [ pullNumberFromString(initialValue.split(",")[0]), pullNumberFromString(initialValue.split(",")[1]) ] };
+            else if (isObject(initialValue))
+                return initialValue;
+            else if (isArray(initialValue) && initialValue.length >= 2)
+                return [ Number(initialValue[0]), Number(initialValue[1]) ];
+            break;
         case "image":
         case "video":
         case "file":
@@ -141,7 +149,7 @@ export function convertMinsToHrsMins24(mins) {
 }
 
 export function transformValue(initialValue, easybaseType, tranformTo) {
-    // TODO: Finish these (richtext)
+    // TODO: Finish these (richtext, location)
     switch (easybaseType) {
         case "time":
             switch (tranformTo) {
