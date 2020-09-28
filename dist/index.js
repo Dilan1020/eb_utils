@@ -236,7 +236,7 @@ function _transformValue() {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.t0 = easybaseType;
-            _context3.next = _context3.t0 === "time" ? 3 : _context3.t0 === "boolean" ? 11 : _context3.t0 === "file" ? 18 : _context3.t0 === "number" ? 18 : _context3.t0 === "video" ? 18 : _context3.t0 === "image" ? 18 : _context3.t0 === "text" ? 18 : _context3.t0 === "richtext" ? 19 : _context3.t0 === "date" ? 20 : _context3.t0 === 'location' ? 32 : 43;
+            _context3.next = _context3.t0 === "time" ? 3 : _context3.t0 === "boolean" ? 11 : _context3.t0 === "file" ? 18 : _context3.t0 === "number" ? 18 : _context3.t0 === "video" ? 18 : _context3.t0 === "image" ? 18 : _context3.t0 === "text" ? 18 : _context3.t0 === "richtext" ? 19 : _context3.t0 === "date" ? 20 : _context3.t0 === 'location' ? 32 : 44;
             break;
 
           case 3:
@@ -257,7 +257,7 @@ function _transformValue() {
             return _context3.abrupt("break", 10);
 
           case 10:
-            return _context3.abrupt("break", 44);
+            return _context3.abrupt("break", 45);
 
           case 11:
             _context3.t2 = transformTo;
@@ -274,7 +274,7 @@ function _transformValue() {
             return _context3.abrupt("break", 17);
 
           case 17:
-            return _context3.abrupt("break", 44);
+            return _context3.abrupt("break", 45);
 
           case 18:
             return _context3.abrupt("return", initialValue);
@@ -312,11 +312,11 @@ function _transformValue() {
             return _context3.abrupt("break", 31);
 
           case 31:
-            return _context3.abrupt("break", 44);
+            return _context3.abrupt("break", 45);
 
           case 32:
             _context3.t4 = transformTo;
-            _context3.next = _context3.t4 === "Map information" ? 35 : _context3.t4 === "Coorindates Array" ? 39 : _context3.t4 === "String" ? 40 : 41;
+            _context3.next = _context3.t4 === "Location Info" ? 35 : _context3.t4 === "Array" ? 39 : _context3.t4 === "String" ? 40 : _context3.t4 === "Map Image" ? 41 : 42;
             break;
 
           case 35:
@@ -325,7 +325,7 @@ function _transformValue() {
 
           case 37:
             map_info_res = _context3.sent;
-            return _context3.abrupt("return", map_info_res);
+            return _context3.abrupt("return", JSON.stringify(map_info_res));
 
           case 39:
             return _context3.abrupt("return", initialValue.coordinates);
@@ -334,15 +334,18 @@ function _transformValue() {
             return _context3.abrupt("return", initialValue.coordinates.join(", "));
 
           case 41:
-            return _context3.abrupt("break", 42);
+            return _context3.abrupt("return", "");
 
           case 42:
-            return _context3.abrupt("break", 44);
+            return _context3.abrupt("break", 43);
 
           case 43:
-            return _context3.abrupt("break", 44);
+            return _context3.abrupt("break", 45);
 
           case 44:
+            return _context3.abrupt("break", 45);
+
+          case 45:
           case "end":
             return _context3.stop();
         }

@@ -209,15 +209,17 @@ export async function transformValue(initialValue, easybaseType, transformTo) {
             break;
         case 'location':
             switch (transformTo) {
-                case "Map information":
+                case "Location Info":
                     {
                         const map_info_res = await _getLocationInformation(initialValue.coordinates[0], initialValue.coordinates[1]);
-                        return map_info_res;
+                        return JSON.stringify(map_info_res);
                     }
-                case "Coorindates Array":
+                case "Array":
                     return initialValue.coordinates;
                 case "String":
                     return initialValue.coordinates.join(", ");
+                case "Map Image":
+                    return "";
                 default:
                     break;
             }
@@ -325,12 +327,12 @@ export function roundToDecimal(number, places) {
 export const forEachAsyncParallel = async (array, callback, thisArg) => {
     const promiseArray = [];
     for (let i = 0; i < array.length; i++) {
-      if (i in array) {
-        const p = Promise.resolve(array[i]).then((currentValue) => {
-          return callback.call(thisArg || this, currentValue, i, array);
-        });
-        promiseArray.push(p);
-      }
+        if (i in array) {
+            const p = Promise.resolve(array[i]).then((currentValue) => {
+                return callback.call(thisArg || this, currentValue, i, array);
+            });
+            promiseArray.push(p);
+        }
     }
     await Promise.all(promiseArray);
-  };
+};
