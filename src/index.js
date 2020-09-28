@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { isFinite, isString, isNumber, isEmpty, capitalize, isObject, isArray } from 'lodash';
 import { sha256 } from 'crypto-hash';
+import axios from 'axios';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
 
@@ -97,7 +98,7 @@ export function convertToType(initialValue, easybaseType) {
             else if (isObject(initialValue))
                 return initialValue;
             else if (isArray(initialValue) && initialValue.length >= 2)
-                return [ Number(initialValue[0]), Number(initialValue[1]) ];
+                return { type: "Point", coordinates: [ Number(initialValue[0]), Number(initialValue[1]) ] };
             break;
         case "image":
         case "video":
@@ -148,11 +149,16 @@ export function convertMinsToHrsMins24(mins) {
     return `${h}:${m}`;
 }
 
-export function transformValue(initialValue, easybaseType, tranformTo) {
-    // TODO: Finish these (richtext, location)
+async function _getLocationInformation(lat, lon) {
+    const api_key = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
+    const res = await axios.get(`http://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${api_key}`);
+    return res.data.resourceSets;
+}
+
+export async function transformValue(initialValue, easybaseType, transformTo) {
     switch (easybaseType) {
         case "time":
-            switch (tranformTo) {
+            switch (transformTo) {
                 case 'HH:MM 12h':
                     return convertMinsToHrsMins12(initialValue);
                 case 'HH:MM 24h':
@@ -164,7 +170,7 @@ export function transformValue(initialValue, easybaseType, tranformTo) {
             }
             break;
         case "boolean":
-            switch (tranformTo) {
+            switch (transformTo) {
                 case 'T/F':
                     return initialValue;
                 case '1/0':
@@ -182,7 +188,7 @@ export function transformValue(initialValue, easybaseType, tranformTo) {
         case "richtext":
             return initialValue;
         case "date":
-            switch (tranformTo) {
+            switch (transformTo) {
                 case 'MM/DD/YYYY':
                     return dayjs.utc(initialValue).format('MM/DD/YYYY');
                 case 'YYYY/MM/DD':
@@ -197,6 +203,21 @@ export function transformValue(initialValue, easybaseType, tranformTo) {
                     return dayjs.utc(initialValue).toISOString();
                 case 'Object':
                     return initialValue;
+                default:
+                    break;
+            }
+            break;
+        case 'location':
+            switch (transformTo) {
+                case "Map information":
+                    {
+                        const map_info_res = await _getLocationInformation(initialValue.coordinates[0], initialValue.coordinates[1]);
+                        return map_info_res;
+                    }
+                case "Coorindates Array":
+                    return initialValue.coordinates;
+                case "String":
+                    return initialValue.coordinates.join(", ");
                 default:
                     break;
             }
