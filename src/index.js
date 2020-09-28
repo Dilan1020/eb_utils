@@ -149,11 +149,15 @@ export function convertMinsToHrsMins24(mins) {
     return `${h}:${m}`;
 }
 
+
+const _MAP_KEY = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
+
 async function _getLocationInformation(lat, lon) {
-    const api_key = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
-    const res = await axios.get(`http://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${api_key}`);
+    const res = await axios.get(`http://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${_MAP_KEY}`);
     return res.data.resourceSets;
 }
+
+const _getLocationImage = (lat, lon) => `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${lat},${lon}/15?mapSize=500,500&mapLayer=Basemap,Buildings&key=${_MAP_KEY}`
 
 export async function transformValue(initialValue, easybaseType, transformTo) {
     switch (easybaseType) {
@@ -219,7 +223,7 @@ export async function transformValue(initialValue, easybaseType, transformTo) {
                 case "String":
                     return initialValue.coordinates.join(", ");
                 case "Map Image":
-                    return "";
+                    return _getLocationImage(initialValue.coordinates[0], initialValue.coordinates[1]);
                 default:
                     break;
             }

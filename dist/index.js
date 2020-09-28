@@ -195,26 +195,27 @@ function convertMinsToHrsMins24(mins) {
   return "".concat(h, ":").concat(m);
 }
 
+var _MAP_KEY = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
+
 function _getLocationInformation(_x, _x2) {
   return _getLocationInformation2.apply(this, arguments);
 }
 
 function _getLocationInformation2() {
   _getLocationInformation2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(lat, lon) {
-    var api_key, res;
+    var res;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            api_key = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
-            _context2.next = 3;
-            return _axios["default"].get("http://dev.virtualearth.net/REST/v1/Locations/".concat(lat, ",").concat(lon, "?key=").concat(api_key));
+            _context2.next = 2;
+            return _axios["default"].get("http://dev.virtualearth.net/REST/v1/Locations/".concat(lat, ",").concat(lon, "?key=").concat(_MAP_KEY));
 
-          case 3:
+          case 2:
             res = _context2.sent;
             return _context2.abrupt("return", res.data.resourceSets);
 
-          case 5:
+          case 4:
           case "end":
             return _context2.stop();
         }
@@ -223,6 +224,10 @@ function _getLocationInformation2() {
   }));
   return _getLocationInformation2.apply(this, arguments);
 }
+
+var _getLocationImage = function _getLocationImage(lat, lon) {
+  return "http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/".concat(lat, ",").concat(lon, "/15?mapSize=500,500&mapLayer=Basemap,Buildings&key=").concat(_MAP_KEY);
+};
 
 function transformValue(_x3, _x4, _x5) {
   return _transformValue.apply(this, arguments);
@@ -334,7 +339,7 @@ function _transformValue() {
             return _context3.abrupt("return", initialValue.coordinates.join(", "));
 
           case 41:
-            return _context3.abrupt("return", "");
+            return _context3.abrupt("return", _getLocationImage(initialValue.coordinates[0], initialValue.coordinates[1]));
 
           case 42:
             return _context3.abrupt("break", 43);
