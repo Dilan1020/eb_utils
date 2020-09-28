@@ -321,3 +321,16 @@ export function roundToDecimal(number, places) {
     const multiplier = Math.pow(10, places); // For our example the multiplier will be 10 * 10 * 10 = 1000.
     return Math.round(number * multiplier) / multiplier;
 }
+
+export const forEachAsyncParallel = async (array, callback, thisArg) => {
+    const promiseArray = [];
+    for (let i = 0; i < array.length; i++) {
+      if (i in array) {
+        const p = Promise.resolve(array[i]).then((currentValue) => {
+          return callback.call(thisArg || this, currentValue, i, array);
+        });
+        promiseArray.push(p);
+      }
+    }
+    await Promise.all(promiseArray);
+  };

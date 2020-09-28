@@ -14,7 +14,7 @@ exports.transformValue = transformValue;
 exports.hashBuilder = hashBuilder;
 exports.getTableNames = getTableNames;
 exports.roundToDecimal = roundToDecimal;
-exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = exports.pullNumberFromString = void 0;
+exports.forEachAsyncParallel = exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = exports.pullNumberFromString = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -33,6 +33,8 @@ var _lodash = require("lodash");
 var _cryptoHash = require("crypto-hash");
 
 var _axios = _interopRequireDefault(require("axios"));
+
+var _this = void 0;
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -198,26 +200,26 @@ function _getLocationInformation(_x, _x2) {
 }
 
 function _getLocationInformation2() {
-  _getLocationInformation2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(lat, lon) {
+  _getLocationInformation2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(lat, lon) {
     var api_key, res;
-    return _regenerator["default"].wrap(function _callee$(_context) {
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context2.prev = _context2.next) {
           case 0:
             api_key = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
-            _context.next = 3;
+            _context2.next = 3;
             return _axios["default"].get("http://dev.virtualearth.net/REST/v1/Locations/".concat(lat, ",").concat(lon, "?key=").concat(api_key));
 
           case 3:
-            res = _context.sent;
-            return _context.abrupt("return", res.data.resourceSets);
+            res = _context2.sent;
+            return _context2.abrupt("return", res.data.resourceSets);
 
           case 5:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee);
+    }, _callee2);
   }));
   return _getLocationInformation2.apply(this, arguments);
 }
@@ -227,125 +229,125 @@ function transformValue(_x3, _x4, _x5) {
 }
 
 function _transformValue() {
-  _transformValue = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(initialValue, easybaseType, transformTo) {
+  _transformValue = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(initialValue, easybaseType, transformTo) {
     var map_info_res;
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            _context2.t0 = easybaseType;
-            _context2.next = _context2.t0 === "time" ? 3 : _context2.t0 === "boolean" ? 11 : _context2.t0 === "file" ? 18 : _context2.t0 === "number" ? 18 : _context2.t0 === "video" ? 18 : _context2.t0 === "image" ? 18 : _context2.t0 === "text" ? 18 : _context2.t0 === "richtext" ? 19 : _context2.t0 === "date" ? 20 : _context2.t0 === 'location' ? 32 : 43;
+            _context3.t0 = easybaseType;
+            _context3.next = _context3.t0 === "time" ? 3 : _context3.t0 === "boolean" ? 11 : _context3.t0 === "file" ? 18 : _context3.t0 === "number" ? 18 : _context3.t0 === "video" ? 18 : _context3.t0 === "image" ? 18 : _context3.t0 === "text" ? 18 : _context3.t0 === "richtext" ? 19 : _context3.t0 === "date" ? 20 : _context3.t0 === 'location' ? 32 : 43;
             break;
 
           case 3:
-            _context2.t1 = transformTo;
-            _context2.next = _context2.t1 === 'HH:MM 12h' ? 6 : _context2.t1 === 'HH:MM 24h' ? 7 : _context2.t1 === 'Total Minutes' ? 8 : 9;
+            _context3.t1 = transformTo;
+            _context3.next = _context3.t1 === 'HH:MM 12h' ? 6 : _context3.t1 === 'HH:MM 24h' ? 7 : _context3.t1 === 'Total Minutes' ? 8 : 9;
             break;
 
           case 6:
-            return _context2.abrupt("return", convertMinsToHrsMins12(initialValue));
+            return _context3.abrupt("return", convertMinsToHrsMins12(initialValue));
 
           case 7:
-            return _context2.abrupt("return", convertMinsToHrsMins24(initialValue));
+            return _context3.abrupt("return", convertMinsToHrsMins24(initialValue));
 
           case 8:
-            return _context2.abrupt("return", Number(initialValue));
+            return _context3.abrupt("return", Number(initialValue));
 
           case 9:
-            return _context2.abrupt("break", 10);
+            return _context3.abrupt("break", 10);
 
           case 10:
-            return _context2.abrupt("break", 44);
+            return _context3.abrupt("break", 44);
 
           case 11:
-            _context2.t2 = transformTo;
-            _context2.next = _context2.t2 === 'T/F' ? 14 : _context2.t2 === '1/0' ? 15 : 16;
+            _context3.t2 = transformTo;
+            _context3.next = _context3.t2 === 'T/F' ? 14 : _context3.t2 === '1/0' ? 15 : 16;
             break;
 
           case 14:
-            return _context2.abrupt("return", initialValue);
+            return _context3.abrupt("return", initialValue);
 
           case 15:
-            return _context2.abrupt("return", Number(initialValue));
+            return _context3.abrupt("return", Number(initialValue));
 
           case 16:
-            return _context2.abrupt("break", 17);
+            return _context3.abrupt("break", 17);
 
           case 17:
-            return _context2.abrupt("break", 44);
+            return _context3.abrupt("break", 44);
 
           case 18:
-            return _context2.abrupt("return", initialValue);
+            return _context3.abrupt("return", initialValue);
 
           case 19:
-            return _context2.abrupt("return", initialValue);
+            return _context3.abrupt("return", initialValue);
 
           case 20:
-            _context2.t3 = transformTo;
-            _context2.next = _context2.t3 === 'MM/DD/YYYY' ? 23 : _context2.t3 === 'YYYY/MM/DD' ? 24 : _context2.t3 === 'dd-mmm-yyyy' ? 25 : _context2.t3 === 'dd.mm.yyyy' ? 26 : _context2.t3 === 'UNIX Stamp' ? 27 : _context2.t3 === 'ISO String' ? 28 : _context2.t3 === 'Object' ? 29 : 30;
+            _context3.t3 = transformTo;
+            _context3.next = _context3.t3 === 'MM/DD/YYYY' ? 23 : _context3.t3 === 'YYYY/MM/DD' ? 24 : _context3.t3 === 'dd-mmm-yyyy' ? 25 : _context3.t3 === 'dd.mm.yyyy' ? 26 : _context3.t3 === 'UNIX Stamp' ? 27 : _context3.t3 === 'ISO String' ? 28 : _context3.t3 === 'Object' ? 29 : 30;
             break;
 
           case 23:
-            return _context2.abrupt("return", _dayjs["default"].utc(initialValue).format('MM/DD/YYYY'));
+            return _context3.abrupt("return", _dayjs["default"].utc(initialValue).format('MM/DD/YYYY'));
 
           case 24:
-            return _context2.abrupt("return", _dayjs["default"].utc(initialValue).format('YYYY/MM/DD'));
+            return _context3.abrupt("return", _dayjs["default"].utc(initialValue).format('YYYY/MM/DD'));
 
           case 25:
-            return _context2.abrupt("return", _dayjs["default"].utc(initialValue).format('DD-MMM-YYYY'));
+            return _context3.abrupt("return", _dayjs["default"].utc(initialValue).format('DD-MMM-YYYY'));
 
           case 26:
-            return _context2.abrupt("return", _dayjs["default"].utc(initialValue).format('DD.MM.YYYY'));
+            return _context3.abrupt("return", _dayjs["default"].utc(initialValue).format('DD.MM.YYYY'));
 
           case 27:
-            return _context2.abrupt("return", _dayjs["default"].utc(initialValue).unix());
+            return _context3.abrupt("return", _dayjs["default"].utc(initialValue).unix());
 
           case 28:
-            return _context2.abrupt("return", _dayjs["default"].utc(initialValue).toISOString());
+            return _context3.abrupt("return", _dayjs["default"].utc(initialValue).toISOString());
 
           case 29:
-            return _context2.abrupt("return", initialValue);
+            return _context3.abrupt("return", initialValue);
 
           case 30:
-            return _context2.abrupt("break", 31);
+            return _context3.abrupt("break", 31);
 
           case 31:
-            return _context2.abrupt("break", 44);
+            return _context3.abrupt("break", 44);
 
           case 32:
-            _context2.t4 = transformTo;
-            _context2.next = _context2.t4 === "Map information" ? 35 : _context2.t4 === "Coorindates Array" ? 39 : _context2.t4 === "String" ? 40 : 41;
+            _context3.t4 = transformTo;
+            _context3.next = _context3.t4 === "Map information" ? 35 : _context3.t4 === "Coorindates Array" ? 39 : _context3.t4 === "String" ? 40 : 41;
             break;
 
           case 35:
-            _context2.next = 37;
+            _context3.next = 37;
             return _getLocationInformation(initialValue.coordinates[0], initialValue.coordinates[1]);
 
           case 37:
-            map_info_res = _context2.sent;
-            return _context2.abrupt("return", map_info_res);
+            map_info_res = _context3.sent;
+            return _context3.abrupt("return", map_info_res);
 
           case 39:
-            return _context2.abrupt("return", initialValue.coordinates);
+            return _context3.abrupt("return", initialValue.coordinates);
 
           case 40:
-            return _context2.abrupt("return", initialValue.coordinates.join(", "));
+            return _context3.abrupt("return", initialValue.coordinates.join(", "));
 
           case 41:
-            return _context2.abrupt("break", 42);
+            return _context3.abrupt("break", 42);
 
           case 42:
-            return _context2.abrupt("break", 44);
+            return _context3.abrupt("break", 44);
 
           case 43:
-            return _context2.abrupt("break", 44);
+            return _context3.abrupt("break", 44);
 
           case 44:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2);
+    }, _callee3);
   }));
   return _transformValue.apply(this, arguments);
 }
@@ -454,7 +456,7 @@ function hashBuilder(_x6) {
 }
 
 function _hashBuilder() {
-  _hashBuilder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(inputsToHash) {
+  _hashBuilder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(inputsToHash) {
     var inputsToNotHash,
         final_string,
         _iterator2,
@@ -464,53 +466,53 @@ function _hashBuilder() {
         _iterator3,
         _step3,
         _curr_in,
-        _args3 = arguments;
+        _args4 = arguments;
 
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            inputsToNotHash = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : [];
+            inputsToNotHash = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : [];
             final_string = "";
             _iterator2 = _createForOfIteratorHelper(inputsToHash);
-            _context3.prev = 3;
+            _context4.prev = 3;
 
             _iterator2.s();
 
           case 5:
             if ((_step2 = _iterator2.n()).done) {
-              _context3.next = 13;
+              _context4.next = 13;
               break;
             }
 
             curr_in = _step2.value;
-            _context3.next = 9;
+            _context4.next = 9;
             return (0, _cryptoHash.sha256)(curr_in);
 
           case 9:
-            res = _context3.sent;
+            res = _context4.sent;
             final_string += res.slice(0, 9);
 
           case 11:
-            _context3.next = 5;
+            _context4.next = 5;
             break;
 
           case 13:
-            _context3.next = 18;
+            _context4.next = 18;
             break;
 
           case 15:
-            _context3.prev = 15;
-            _context3.t0 = _context3["catch"](3);
+            _context4.prev = 15;
+            _context4.t0 = _context4["catch"](3);
 
-            _iterator2.e(_context3.t0);
+            _iterator2.e(_context4.t0);
 
           case 18:
-            _context3.prev = 18;
+            _context4.prev = 18;
 
             _iterator2.f();
 
-            return _context3.finish(18);
+            return _context4.finish(18);
 
           case 21:
             _iterator3 = _createForOfIteratorHelper(inputsToNotHash);
@@ -526,14 +528,14 @@ function _hashBuilder() {
               _iterator3.f();
             }
 
-            return _context3.abrupt("return", final_string);
+            return _context4.abrupt("return", final_string);
 
           case 24:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, null, [[3, 15, 18, 21]]);
+    }, _callee4, null, [[3, 15, 18, 21]]);
   }));
   return _hashBuilder.apply(this, arguments);
 }
@@ -543,21 +545,21 @@ function getTableNames(_x7) {
 }
 
 function _getTableNames() {
-  _getTableNames = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(db) {
+  _getTableNames = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(db) {
     var collectionNames, currCollectionNames, _filtered_names;
 
-    return _regenerator["default"].wrap(function _callee4$(_context4) {
+    return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
             collectionNames = [];
-            _context4.next = 3;
+            _context5.next = 3;
             return db.listCollections({}, {
               nameOnly: true
             }).toArray();
 
           case 3:
-            currCollectionNames = _context4.sent;
+            currCollectionNames = _context5.sent;
 
             if (currCollectionNames !== undefined && currCollectionNames.length !== 0) {
               _filtered_names = currCollectionNames.reduce(function (newArr, ele) {
@@ -567,14 +569,14 @@ function _getTableNames() {
               collectionNames.push.apply(collectionNames, (0, _toConsumableArray2["default"])(_filtered_names));
             }
 
-            return _context4.abrupt("return", collectionNames);
+            return _context5.abrupt("return", collectionNames);
 
           case 6:
           case "end":
-            return _context4.stop();
+            return _context5.stop();
         }
       }
-    }, _callee4);
+    }, _callee5);
   }));
   return _getTableNames.apply(this, arguments);
 }
@@ -584,3 +586,44 @@ function roundToDecimal(number, places) {
 
   return Math.round(number * multiplier) / multiplier;
 }
+
+var forEachAsyncParallel = /*#__PURE__*/function () {
+  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(array, callback, thisArg) {
+    var promiseArray, _loop, i;
+
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            promiseArray = [];
+
+            _loop = function _loop(i) {
+              if (i in array) {
+                var p = Promise.resolve(array[i]).then(function (currentValue) {
+                  return callback.call(thisArg || _this, currentValue, i, array);
+                });
+                promiseArray.push(p);
+              }
+            };
+
+            for (i = 0; i < array.length; i++) {
+              _loop(i);
+            }
+
+            _context.next = 5;
+            return Promise.all(promiseArray);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function forEachAsyncParallel(_x8, _x9, _x10) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+exports.forEachAsyncParallel = forEachAsyncParallel;
