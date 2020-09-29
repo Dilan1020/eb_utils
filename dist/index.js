@@ -225,10 +225,6 @@ function _getLocationInformation2() {
   return _getLocationInformation2.apply(this, arguments);
 }
 
-var _getLocationImage = function _getLocationImage(lat, lon) {
-  return "http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/".concat(lat, ",").concat(lon, "/15?mapSize=500,500&mapLayer=Basemap,Buildings&key=").concat(_MAP_KEY);
-};
-
 function transformValue(_x3, _x4, _x5) {
   return _transformValue.apply(this, arguments);
 }
@@ -241,7 +237,7 @@ function _transformValue() {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.t0 = easybaseType;
-            _context3.next = _context3.t0 === "time" ? 3 : _context3.t0 === "boolean" ? 11 : _context3.t0 === "file" ? 18 : _context3.t0 === "number" ? 18 : _context3.t0 === "video" ? 18 : _context3.t0 === "image" ? 18 : _context3.t0 === "text" ? 18 : _context3.t0 === "richtext" ? 19 : _context3.t0 === "date" ? 20 : _context3.t0 === 'location' ? 32 : 44;
+            _context3.next = _context3.t0 === "time" ? 3 : _context3.t0 === "boolean" ? 11 : _context3.t0 === "file" ? 18 : _context3.t0 === "number" ? 18 : _context3.t0 === "video" ? 18 : _context3.t0 === "image" ? 18 : _context3.t0 === "text" ? 18 : _context3.t0 === "richtext" ? 19 : _context3.t0 === "date" ? 20 : _context3.t0 === 'location' ? 32 : 43;
             break;
 
           case 3:
@@ -262,7 +258,7 @@ function _transformValue() {
             return _context3.abrupt("break", 10);
 
           case 10:
-            return _context3.abrupt("break", 45);
+            return _context3.abrupt("break", 44);
 
           case 11:
             _context3.t2 = transformTo;
@@ -279,7 +275,7 @@ function _transformValue() {
             return _context3.abrupt("break", 17);
 
           case 17:
-            return _context3.abrupt("break", 45);
+            return _context3.abrupt("break", 44);
 
           case 18:
             return _context3.abrupt("return", initialValue);
@@ -317,11 +313,11 @@ function _transformValue() {
             return _context3.abrupt("break", 31);
 
           case 31:
-            return _context3.abrupt("break", 45);
+            return _context3.abrupt("break", 44);
 
           case 32:
             _context3.t4 = transformTo;
-            _context3.next = _context3.t4 === "Location Info" ? 35 : _context3.t4 === "Array" ? 39 : _context3.t4 === "String" ? 40 : _context3.t4 === "Map Image" ? 41 : 42;
+            _context3.next = _context3.t4 === "Location Info" ? 35 : _context3.t4 === "Array" ? 39 : _context3.t4 === "String" ? 40 : 41;
             break;
 
           case 35:
@@ -339,18 +335,15 @@ function _transformValue() {
             return _context3.abrupt("return", initialValue.coordinates.join(", "));
 
           case 41:
-            return _context3.abrupt("return", _getLocationImage(initialValue.coordinates[0], initialValue.coordinates[1]));
+            return _context3.abrupt("break", 42);
 
           case 42:
-            return _context3.abrupt("break", 43);
+            return _context3.abrupt("break", 44);
 
           case 43:
-            return _context3.abrupt("break", 45);
+            return _context3.abrupt("break", 44);
 
           case 44:
-            return _context3.abrupt("break", 45);
-
-          case 45:
           case "end":
             return _context3.stop();
         }

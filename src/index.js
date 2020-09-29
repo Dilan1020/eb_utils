@@ -157,8 +157,6 @@ async function _getLocationInformation(lat, lon) {
     return res.data.resourceSets;
 }
 
-const _getLocationImage = (lat, lon) => `http://dev.virtualearth.net/REST/v1/Imagery/Map/Road/${lat},${lon}/15?mapSize=500,500&mapLayer=Basemap,Buildings&key=${_MAP_KEY}`
-
 export async function transformValue(initialValue, easybaseType, transformTo) {
     switch (easybaseType) {
         case "time":
@@ -222,8 +220,6 @@ export async function transformValue(initialValue, easybaseType, transformTo) {
                     return initialValue.coordinates;
                 case "String":
                     return initialValue.coordinates.join(", ");
-                case "Map Image":
-                    return _getLocationImage(initialValue.coordinates[0], initialValue.coordinates[1]);
                 default:
                     break;
             }
