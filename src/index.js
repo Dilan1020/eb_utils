@@ -153,8 +153,13 @@ export function convertMinsToHrsMins24(mins) {
 const _MAP_KEY = "AtcgB6PwQI98qt8NDJmQ41izRoqbvNUJaWywL5-Cu7wqt7Pmypc8tMv-VftCeppV";
 
 async function _getLocationInformation(lat, lon) {
-    const res = await axios.get(`http://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${_MAP_KEY}`);
-    return res.data.resourceSets;
+    try {
+        const res = await axios.get(`http://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${_MAP_KEY}`);
+        if (res.data.statusCode === 200)
+            return res.data.resourceSets.resources[0];
+        else
+            throw new Error("Status error");
+    } catch (e) { return {} }
 }
 
 export async function transformValue(initialValue, easybaseType, transformTo) {

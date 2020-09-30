@@ -208,19 +208,38 @@ function _getLocationInformation2() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.next = 2;
+            _context2.prev = 0;
+            _context2.next = 3;
             return _axios["default"].get("http://dev.virtualearth.net/REST/v1/Locations/".concat(lat, ",").concat(lon, "?key=").concat(_MAP_KEY));
 
-          case 2:
+          case 3:
             res = _context2.sent;
-            return _context2.abrupt("return", res.data.resourceSets);
 
-          case 4:
+            if (!(res.data.statusCode === 200)) {
+              _context2.next = 8;
+              break;
+            }
+
+            return _context2.abrupt("return", res.data.resourceSets.resources[0]);
+
+          case 8:
+            throw new Error("Status error");
+
+          case 9:
+            _context2.next = 14;
+            break;
+
+          case 11:
+            _context2.prev = 11;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", {});
+
+          case 14:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2);
+    }, _callee2, null, [[0, 11]]);
   }));
   return _getLocationInformation2.apply(this, arguments);
 }
