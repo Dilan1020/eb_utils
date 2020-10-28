@@ -162,6 +162,29 @@ async function _getLocationInformation(lat, lon) {
     } catch (e) { return {} }
 }
 
+export async function transformValueToDefault(initialValue, easybaseType) {
+    switch (easybaseType) {
+        case "time":
+            return convertMinsToHrsMins24(initialValue);
+        case "boolean":
+            return initialValue;
+        case "file":
+        case "number":
+        case "video":
+        case "image":
+        case "text":
+            return initialValue;
+        case "richtext":
+            return initialValue;
+        case "date":
+            return initialValue;
+        case 'location':
+            return initialValue.coordinates;
+        default:
+            break;
+    }
+}
+
 export async function transformValue(initialValue, easybaseType, transformTo) {
     switch (easybaseType) {
         case "time":
@@ -234,7 +257,7 @@ export async function transformValue(initialValue, easybaseType, transformTo) {
     }
 }
 
-export const accessorNameToColumnName = given_key => capitalize(given_key.replace(/_/g, ' '))
+export const accessorNameToColumnName = given_key => capitalize(given_key.replace(/_/g, ' '));
 
 export const normalizeAccessorName = given_key => given_key.toLowerCase().trim().replace(/ /g, '_');
 
