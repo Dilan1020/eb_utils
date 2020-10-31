@@ -346,6 +346,16 @@ export async function getTableNames(db) {
     return collectionNames;
 }
 
+export async function shiftDocs(db, collection, startIndex, shiftBy) {
+    const docsToChange = await db.collection(collection).find({ _position: { $gte: startIndex } }, { projection: { _id: 1 } }).toArray();
+
+    await db.collection(collection).bulkWrite(docsToChange.map((ele, i) => ({
+        updateOne: {
+            filter: { _id: ele._id },
+            update: { $set: { _position: startIndex + i + shiftBy } }
+        }
+    })));
+}
 
 export function roundToDecimal(number, places) {
     const multiplier = Math.pow(10, places); // For our example the multiplier will be 10 * 10 * 10 = 1000.

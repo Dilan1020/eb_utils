@@ -14,6 +14,7 @@ exports.transformValueToDefault = transformValueToDefault;
 exports.transformValue = transformValue;
 exports.hashBuilder = hashBuilder;
 exports.getTableNames = getTableNames;
+exports.shiftDocs = shiftDocs;
 exports.roundToDecimal = roundToDecimal;
 exports.forEachAsyncParallel = exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = exports.pullNumberFromString = void 0;
 
@@ -647,6 +648,56 @@ function _getTableNames() {
   return _getTableNames.apply(this, arguments);
 }
 
+function shiftDocs(_x10, _x11, _x12, _x13) {
+  return _shiftDocs.apply(this, arguments);
+}
+
+function _shiftDocs() {
+  _shiftDocs = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(db, collection, startIndex, shiftBy) {
+    var docsToChange;
+    return _regenerator["default"].wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return db.collection(collection).find({
+              _position: {
+                $gte: startIndex
+              }
+            }, {
+              projection: {
+                _id: 1
+              }
+            }).toArray();
+
+          case 2:
+            docsToChange = _context7.sent;
+            _context7.next = 5;
+            return db.collection(collection).bulkWrite(docsToChange.map(function (ele, i) {
+              return {
+                updateOne: {
+                  filter: {
+                    _id: ele._id
+                  },
+                  update: {
+                    $set: {
+                      _position: startIndex + i + shiftBy
+                    }
+                  }
+                }
+              };
+            }));
+
+          case 5:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+  return _shiftDocs.apply(this, arguments);
+}
+
 function roundToDecimal(number, places) {
   var multiplier = Math.pow(10, places); // For our example the multiplier will be 10 * 10 * 10 = 1000.
 
@@ -687,7 +738,7 @@ var forEachAsyncParallel = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function forEachAsyncParallel(_x10, _x11, _x12) {
+  return function forEachAsyncParallel(_x14, _x15, _x16) {
     return _ref3.apply(this, arguments);
   };
 }();
