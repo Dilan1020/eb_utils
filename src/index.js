@@ -349,12 +349,14 @@ export async function getTableNames(db) {
 export async function shiftDocs(db, collection, startIndex, shiftBy) {
     const docsToChange = await db.collection(collection).find({ _position: { $gte: startIndex } }, { projection: { _id: 1 } }).toArray();
 
-    await db.collection(collection).bulkWrite(docsToChange.map((ele, i) => ({
-        updateOne: {
-            filter: { _id: ele._id },
-            update: { $set: { _position: startIndex + i + shiftBy } }
-        }
-    })));
+    if (docsToChange.length > 0) {
+        await db.collection(collection).bulkWrite(docsToChange.map((ele, i) => ({
+            updateOne: {
+                filter: { _id: ele._id },
+                update: { $set: { _position: startIndex + i + shiftBy } }
+            }
+        })));
+    }
 }
 
 export function roundToDecimal(number, places) {

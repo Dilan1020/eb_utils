@@ -672,7 +672,13 @@ function _shiftDocs() {
 
           case 2:
             docsToChange = _context7.sent;
-            _context7.next = 5;
+
+            if (!(docsToChange.length > 0)) {
+              _context7.next = 6;
+              break;
+            }
+
+            _context7.next = 6;
             return db.collection(collection).bulkWrite(docsToChange.map(function (ele, i) {
               return {
                 updateOne: {
@@ -688,7 +694,7 @@ function _shiftDocs() {
               };
             }));
 
-          case 5:
+          case 6:
           case "end":
             return _context7.stop();
         }
