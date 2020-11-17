@@ -91,14 +91,14 @@ var shallowCompare = function shallowCompare(obj1, obj2) {
 };
 
 exports.shallowCompare = shallowCompare;
-var alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,20}$/; // Alhpanumber, allowing for spaces and hyphens
+var alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,40}$/; // Alhpanumber, allowing for spaces and hyphens
 
 exports.alphanumericWithSpaceHyphen = alphanumericWithSpaceHyphen;
 
 var checkStringForDatabase = function checkStringForDatabase(potential_name) {
   if (potential_name.includes("_")) return "Cannot have '_' in name, use '-' instead";
   if (potential_name.trim() === '') return "Cannot have empty name";
-  if (potential_name.length > 20) return "Names cannot be longer 20 characters";
+  if (potential_name.length > 40) return "Names cannot be longer 40 characters";
   if (!alphanumericWithSpaceHyphen.test(potential_name)) return "Names can only contain a-Z, 0-9, ' ', -";
   if (potential_name.trim().toUpperCase() === 'CHECKBOX') return "Cannot have name 'Checkbox'";
   if (potential_name.trim().toUpperCase() === 'LIMIT') return "Cannot have name 'Limit'";

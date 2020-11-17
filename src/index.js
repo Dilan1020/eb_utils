@@ -36,15 +36,15 @@ export const shallowCompare = (obj1, obj2) =>
         Object.prototype.hasOwnProperty.call(obj2, key) && obj1[key] === obj2[key]
     );
 
-export const alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,20}$/ // Alhpanumber, allowing for spaces and hyphens
+export const alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,40}$/ // Alhpanumber, allowing for spaces and hyphens
 
 export const checkStringForDatabase = (potential_name) => {
     if (potential_name.includes("_"))
         return "Cannot have '_' in name, use '-' instead";
     if (potential_name.trim() === '')
         return "Cannot have empty name";
-    if (potential_name.length > 20)
-        return "Names cannot be longer 20 characters"
+    if (potential_name.length > 40)
+        return "Names cannot be longer 40 characters"
     if (!alphanumericWithSpaceHyphen.test(potential_name))
         return "Names can only contain a-Z, 0-9, ' ', -";
     if (potential_name.trim().toUpperCase() === 'CHECKBOX')
