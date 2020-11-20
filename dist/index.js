@@ -630,7 +630,7 @@ function _getTableNames() {
 
             if (currCollectionNames !== undefined && currCollectionNames.length !== 0) {
               _filtered_names = currCollectionNames.reduce(function (newArr, ele) {
-                if (!ele.name.includes('.')) newArr.push(ele.name);
+                if (!ele.name.includes('.') && ele.name !== "_users" && ele.name !== "_projects") newArr.push(ele.name);
                 return newArr;
               }, []);
               collectionNames.push.apply(collectionNames, (0, _toConsumableArray2["default"])(_filtered_names));
