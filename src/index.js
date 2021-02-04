@@ -95,10 +95,10 @@ export function convertToType(initialValue, easybaseType) {
         case "location":
             if (isString(initialValue))
                 return { type: "Point", coordinates: [ pullNumberFromString(initialValue.split(",")[0]), pullNumberFromString(initialValue.split(",")[1]) ] };
+            else if (isArray(initialValue) && initialValue.length >= 2) // Order is important here
+                return { type: "Point", coordinates: [ Number(initialValue[0]), Number(initialValue[1]) ] };
             else if (isObject(initialValue))
                 return initialValue;
-            else if (isArray(initialValue) && initialValue.length >= 2)
-                return { type: "Point", coordinates: [ Number(initialValue[0]), Number(initialValue[1]) ] };
             break;
         case "image":
         case "video":

@@ -146,10 +146,11 @@ function convertToType(initialValue, easybaseType) {
       if ((0, _lodash.isString)(initialValue)) return {
         type: "Point",
         coordinates: [pullNumberFromString(initialValue.split(",")[0]), pullNumberFromString(initialValue.split(",")[1])]
-      };else if ((0, _lodash.isObject)(initialValue)) return initialValue;else if ((0, _lodash.isArray)(initialValue) && initialValue.length >= 2) return {
-        type: "Point",
-        coordinates: [Number(initialValue[0]), Number(initialValue[1])]
-      };
+      };else if ((0, _lodash.isArray)(initialValue) && initialValue.length >= 2) // Order is important here
+        return {
+          type: "Point",
+          coordinates: [Number(initialValue[0]), Number(initialValue[1])]
+        };else if ((0, _lodash.isObject)(initialValue)) return initialValue;
       break;
 
     case "image":
