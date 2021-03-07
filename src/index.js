@@ -337,7 +337,7 @@ export async function getTableNames(db) {
     const currCollectionNames = await db.listCollections({}, { nameOnly: true }).toArray();
     if (currCollectionNames !== undefined && currCollectionNames.length !== 0) {
         const _filtered_names = currCollectionNames.reduce((newArr, ele) => {
-            if (!ele.name.includes('.') && ele.name !== "_users" && ele.name !== "_projects") newArr.push(ele.name)
+            if (!ele.name.includes('.') && ele.name.charAt(0) !== "_") newArr.push(ele.name)
             return newArr
         }, []);
         collectionNames.push(..._filtered_names);
