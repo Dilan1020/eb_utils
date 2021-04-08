@@ -30,7 +30,19 @@ var _dayjs = _interopRequireDefault(require("dayjs"));
 
 var _utc = _interopRequireDefault(require("dayjs/plugin/utc"));
 
-var _lodash = require("lodash");
+var _isFinite = _interopRequireDefault(require("lodash/isFinite"));
+
+var _isString = _interopRequireDefault(require("lodash/isString"));
+
+var _isNumber = _interopRequireDefault(require("lodash/isNumber"));
+
+var _isEmpty = _interopRequireDefault(require("lodash/isEmpty"));
+
+var _capitalize = _interopRequireDefault(require("lodash/capitalize"));
+
+var _isObject = _interopRequireDefault(require("lodash/isObject"));
+
+var _isArray = _interopRequireDefault(require("lodash/isArray"));
 
 var _cryptoHash = require("crypto-hash");
 
@@ -51,7 +63,7 @@ try {
 }
 
 var pullNumberFromString = function pullNumberFromString(in_str) {
-  return (0, _lodash.isString)(in_str) ? Number(in_str.replace(/\D/g, "")) : 0;
+  return (0, _isString["default"])(in_str) ? Number(in_str.replace(/\D/g, "")) : 0;
 };
 
 exports.pullNumberFromString = pullNumberFromString;
@@ -107,7 +119,7 @@ var checkStringForDatabase = function checkStringForDatabase(potential_name) {
   if (potential_name.trim().toUpperCase() === 'SEARCHSTRING') return "Cannot have name 'SearchString'";
   if (potential_name.trim().toUpperCase() === 'ORDER') return "Cannot have name 'Order'";
   if (potential_name.trim().toUpperCase() === 'JUSTCOLUMNS') return "Cannot have name 'JustColumns'";
-  if (!isNaN(parseFloat(potential_name.trim())) && (0, _lodash.isFinite)(+potential_name.trim())) return "Cannot have numeric name";else return true;
+  if (!isNaN(parseFloat(potential_name.trim())) && (0, _isFinite["default"])(+potential_name.trim())) return "Cannot have numeric name";else return true;
 };
 
 exports.checkStringForDatabase = checkStringForDatabase;
@@ -117,19 +129,19 @@ function convertToType(initialValue, easybaseType) {
 
   switch (easybaseType) {
     case "time":
-      if ((0, _lodash.isFinite)(initialValue)) return Number(initialValue); // isFinite is like isNumber with strings
+      if ((0, _isFinite["default"])(initialValue)) return Number(initialValue); // isFinite is like isNumber with strings
       else return convertTimeHHMMToMinutes(initialValue);
 
     case "number":
       return Number(initialValue);
 
     case "boolean":
-      if ((0, _lodash.isString)(initialValue)) {
+      if ((0, _isString["default"])(initialValue)) {
         if (initialValue === "true") return true;
         if (initialValue === "false") return false;
         if (initialValue === "1") return true;
         if (initialValue === "0") return false;
-      } else if ((0, _lodash.isNumber)(initialValue)) {
+      } else if ((0, _isNumber["default"])(initialValue)) {
         if (initialValue === 1) return true;else return false;
       }
 
@@ -143,14 +155,14 @@ function convertToType(initialValue, easybaseType) {
       return new Date(initialValue);
 
     case "location":
-      if ((0, _lodash.isString)(initialValue)) return {
+      if ((0, _isString["default"])(initialValue)) return {
         type: "Point",
         coordinates: [pullNumberFromString(initialValue.split(",")[0]), pullNumberFromString(initialValue.split(",")[1])]
-      };else if ((0, _lodash.isArray)(initialValue) && initialValue.length >= 2) // Order is important here
+      };else if ((0, _isArray["default"])(initialValue) && initialValue.length >= 2) // Order is important here
         return {
           type: "Point",
           coordinates: [Number(initialValue[0]), Number(initialValue[1])]
-        };else if ((0, _lodash.isObject)(initialValue)) return initialValue;
+        };else if ((0, _isObject["default"])(initialValue)) return initialValue;
       break;
 
     case "image":
@@ -421,7 +433,7 @@ function _transformValue() {
 }
 
 var accessorNameToColumnName = function accessorNameToColumnName(given_key) {
-  return (0, _lodash.capitalize)(given_key.replace(/_/g, ' '));
+  return (0, _capitalize["default"])(given_key.replace(/_/g, ' '));
 };
 
 exports.accessorNameToColumnName = accessorNameToColumnName;
@@ -466,7 +478,7 @@ var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, ac
     if (!valid_keys_arr.includes(new_key)) delete obj[new_key];else obj[new_key] = convertToType(val, accessorToTypeMap[new_key]);
   });
 
-  if (!(0, _lodash.isEmpty)(obj) && addNulls) {
+  if (!(0, _isEmpty["default"])(obj) && addNulls) {
     // Add null to missing keys
     var keysToNullify = valid_keys_arr.filter(function (x) {
       return !(x in obj);
@@ -502,7 +514,7 @@ var createMongoSearchQuery = function createMongoSearchQuery(column_accessors, s
     matchOrOptions.push(new_obj);
   });
 
-  if ((0, _lodash.isNumber)(search_str)) {
+  if ((0, _isNumber["default"])(search_str)) {
     column_accessors.forEach(function (ele) {
       var new_obj = {};
       new_obj[ele] = {

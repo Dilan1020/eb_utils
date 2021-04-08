@@ -1,6 +1,12 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { isFinite, isString, isNumber, isEmpty, capitalize, isObject, isArray } from 'lodash';
+import isFinite from 'lodash/isFinite';
+import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
+import isEmpty from 'lodash/isEmpty';
+import capitalize from 'lodash/capitalize';
+import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
 import { sha256 } from 'crypto-hash';
 import axios from 'axios';
 
