@@ -169,7 +169,7 @@ async function _getLocationInformation(lat, lon) {
 }
 
 
-export function transformForDB(initialObj, mongoColTypesArr) {
+export function setDefaultValues(initialObj, mongoColTypesArr) {
     let accessorToTypeMap = mongoColTypesArr.reduce((a, key) => Object.assign(a, { [key.column_accessor]: key.column_type }), {});
 
     const convertToDefault = (val, easybaseType) => {

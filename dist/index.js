@@ -10,7 +10,7 @@ exports.convertToType = convertToType;
 exports.convertTimeHHMMToMinutes = convertTimeHHMMToMinutes;
 exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
-exports.transformForDB = transformForDB;
+exports.setDefaultValues = setDefaultValues;
 exports.transformValueToDefault = transformValueToDefault;
 exports.transformValue = transformValue;
 exports.hashBuilder = hashBuilder;
@@ -266,7 +266,7 @@ function _getLocationInformation2() {
   return _getLocationInformation2.apply(this, arguments);
 }
 
-function transformForDB(initialObj, mongoColTypesArr) {
+function setDefaultValues(initialObj, mongoColTypesArr) {
   var accessorToTypeMap = mongoColTypesArr.reduce(function (a, key) {
     return Object.assign(a, (0, _defineProperty2["default"])({}, key.column_accessor, key.column_type));
   }, {});
