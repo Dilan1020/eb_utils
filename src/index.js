@@ -280,6 +280,44 @@ function hasWhiteSpace(s) {
     
     will return an empty object if there are no valid keys
 */
+export const translateRecordForDB = (initialObject, mongoColTypesArr, addNulls = false) => {
+    let obj = { ...initialObject };
+
+    let accessorToTypeMap = {};
+    let accessorToNullMap = {};
+    mongoColTypesArr.forEach(ele => {
+        accessorToTypeMap[ele.column_accessor] = ele.column_type;
+        accessorToNullMap[ele.column_accessor] = null;
+    });
+
+    Object.entries(obj).forEach(([key, val]) => {
+        let new_key = key;
+        if (hasWhiteSpace(key) || key.toLowerCase() !== key) {
+            new_key = normalizeAccessorName(key);
+            delete obj[key];
+        }
+
+        if (!Object.prototype.hasOwnProperty.call(accessorToTypeMap, new_key)) delete obj[new_key];
+        else obj[new_key] = convertToType(val, accessorToTypeMap[new_key]);
+    });
+
+    if (!isEmpty(obj) && addNulls)
+    {
+        obj = { ...accessorToNullMap, ...obj };
+    }
+
+    return obj;
+}
+
+/*
+    DEPRECATED: USE translateRecordForDB instead
+    1. normalize object keys for proper db format
+    2. delete keys that dont exist
+    3. add null for keys that are not present
+    4. cast all values to proper db format based on type
+    
+    will return an empty object if there are no valid keys
+*/
 export const normalizeObjectForDB = (obj, valid_keys_arr, accessorToTypeMap, addNulls = true) => {
     Object.entries(obj).forEach(([key, val]) => {
         let new_key = key;

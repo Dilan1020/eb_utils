@@ -16,13 +16,15 @@ exports.hashBuilder = hashBuilder;
 exports.getTableNames = getTableNames;
 exports.shiftDocs = shiftDocs;
 exports.roundToDecimal = roundToDecimal;
-exports.forEachAsyncParallel = exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = exports.pullNumberFromString = void 0;
+exports.forEachAsyncParallel = exports.createMongoSearchQuery = exports.HASH_PLACEHOLDER = exports.normalizeObjectForDB = exports.translateRecordForDB = exports.normalizeAccessorName = exports.accessorNameToColumnName = exports.checkStringForDatabase = exports.alphanumericWithSpaceHyphen = exports.shallowCompare = exports.clearArray = exports.clearObject = exports.pullNumberFromString = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -55,6 +57,10 @@ function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symb
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 try {
   _dayjs["default"].utc().isUTC();
@@ -460,12 +466,57 @@ function hasWhiteSpace(s) {
 */
 
 
-var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, accessorToTypeMap) {
-  var addNulls = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+var translateRecordForDB = function translateRecordForDB(initialObject, mongoColTypesArr) {
+  var addNulls = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+  var obj = _objectSpread({}, initialObject);
+
+  var accessorToTypeMap = {};
+  var accessorToNullMap = {};
+  mongoColTypesArr.forEach(function (ele) {
+    accessorToTypeMap[ele.column_accessor] = ele.column_type;
+    accessorToNullMap[ele.column_accessor] = null;
+  });
   Object.entries(obj).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2["default"])(_ref, 2),
         key = _ref2[0],
         val = _ref2[1];
+
+    var new_key = key;
+
+    if (hasWhiteSpace(key) || key.toLowerCase() !== key) {
+      new_key = normalizeAccessorName(key);
+      delete obj[key];
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(accessorToTypeMap, new_key)) delete obj[new_key];else obj[new_key] = convertToType(val, accessorToTypeMap[new_key]);
+  });
+
+  if (!(0, _isEmpty["default"])(obj) && addNulls) {
+    obj = _objectSpread(_objectSpread({}, accessorToNullMap), obj);
+  }
+
+  return obj;
+};
+/*
+    DEPRECATED: USE translateRecordForDB instead
+    1. normalize object keys for proper db format
+    2. delete keys that dont exist
+    3. add null for keys that are not present
+    4. cast all values to proper db format based on type
+    
+    will return an empty object if there are no valid keys
+*/
+
+
+exports.translateRecordForDB = translateRecordForDB;
+
+var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, accessorToTypeMap) {
+  var addNulls = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+  Object.entries(obj).forEach(function (_ref3) {
+    var _ref4 = (0, _slicedToArray2["default"])(_ref3, 2),
+        key = _ref4[0],
+        val = _ref4[1];
 
     var new_key = key;
 
@@ -724,7 +775,7 @@ function roundToDecimal(number, places) {
 }
 
 var forEachAsyncParallel = /*#__PURE__*/function () {
-  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(array, callback, thisArg) {
+  var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(array, callback, thisArg) {
     var promiseArray, _loop, i;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -758,7 +809,7 @@ var forEachAsyncParallel = /*#__PURE__*/function () {
   }));
 
   return function forEachAsyncParallel(_x14, _x15, _x16) {
-    return _ref3.apply(this, arguments);
+    return _ref5.apply(this, arguments);
   };
 }();
 
