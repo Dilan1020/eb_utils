@@ -10,6 +10,7 @@ exports.convertToType = convertToType;
 exports.convertTimeHHMMToMinutes = convertTimeHHMMToMinutes;
 exports.convertMinsToHrsMins12 = convertMinsToHrsMins12;
 exports.convertMinsToHrsMins24 = convertMinsToHrsMins24;
+exports.transformForDB = transformForDB;
 exports.transformValueToDefault = transformValueToDefault;
 exports.transformValue = transformValue;
 exports.hashBuilder = hashBuilder;
@@ -52,15 +53,15 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _this = void 0;
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 try {
   _dayjs["default"].utc().isUTC();
@@ -263,6 +264,78 @@ function _getLocationInformation2() {
     }, _callee2, null, [[0, 11]]);
   }));
   return _getLocationInformation2.apply(this, arguments);
+}
+
+function transformForDB(initialObj, mongoColTypesArr) {
+  var accessorToTypeMap = mongoColTypesArr.reduce(function (a, key) {
+    return Object.assign(a, (0, _defineProperty2["default"])({}, key.column_accessor, key.column_type));
+  }, {});
+
+  var convertToDefault = function convertToDefault(val, easybaseType) {
+    switch (easybaseType) {
+      case "time":
+        return convertMinsToHrsMins24(val);
+
+      case "boolean":
+        return val;
+
+      case "file":
+      case "number":
+      case "video":
+      case "image":
+      case "text":
+        return val;
+
+      case "richtext":
+        return val;
+
+      case "date":
+        return val;
+
+      case 'location':
+        return val.coordinates;
+
+      default:
+        break;
+    }
+  };
+
+  if ((0, _isArray["default"])(initialObj)) {
+    var _iterator = _createForOfIteratorHelper(initialObj),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var currRecord = _step.value;
+
+        for (var _i = 0, _Object$entries = Object.entries(currRecord); _i < _Object$entries.length; _i++) {
+          var _Object$entries$_i = (0, _slicedToArray2["default"])(_Object$entries[_i], 2),
+              currKey = _Object$entries$_i[0],
+              currValue = _Object$entries$_i[1];
+
+          if (currValue !== null && currKey !== "_id") currRecord[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+        }
+
+        delete currRecord._id;
+        delete currRecord._position;
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  } else {
+    for (var _i2 = 0, _Object$entries2 = Object.entries(initialObj); _i2 < _Object$entries2.length; _i2++) {
+      var _Object$entries2$_i = (0, _slicedToArray2["default"])(_Object$entries2[_i2], 2),
+          _currKey = _Object$entries2$_i[0],
+          _currValue = _Object$entries2$_i[1];
+
+      if (_currValue !== null && _currKey !== "_id") initialObj[_currKey] = convertToDefault(_currValue, accessorToTypeMap[_currKey]);
+    }
+
+    delete initialObj._id;
+    delete initialObj._position;
+  }
 }
 
 function transformValueToDefault(_x3, _x4) {
@@ -535,18 +608,18 @@ var normalizeObjectForDB = function normalizeObjectForDB(obj, valid_keys_arr, ac
       return !(x in obj);
     });
 
-    var _iterator = _createForOfIteratorHelper(keysToNullify),
-        _step;
+    var _iterator2 = _createForOfIteratorHelper(keysToNullify),
+        _step2;
 
     try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var key = _step.value;
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var key = _step2.value;
         obj[key] = null;
       }
     } catch (err) {
-      _iterator.e(err);
+      _iterator2.e(err);
     } finally {
-      _iterator.f();
+      _iterator2.f();
     }
   }
 
@@ -590,12 +663,12 @@ function _hashBuilder() {
   _hashBuilder = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(inputsToHash) {
     var inputsToNotHash,
         final_string,
-        _iterator2,
-        _step2,
-        curr_in,
-        res,
         _iterator3,
         _step3,
+        curr_in,
+        res,
+        _iterator4,
+        _step4,
         _curr_in,
         _args5 = arguments;
 
@@ -605,18 +678,18 @@ function _hashBuilder() {
           case 0:
             inputsToNotHash = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : [];
             final_string = "";
-            _iterator2 = _createForOfIteratorHelper(inputsToHash);
+            _iterator3 = _createForOfIteratorHelper(inputsToHash);
             _context5.prev = 3;
 
-            _iterator2.s();
+            _iterator3.s();
 
           case 5:
-            if ((_step2 = _iterator2.n()).done) {
+            if ((_step3 = _iterator3.n()).done) {
               _context5.next = 13;
               break;
             }
 
-            curr_in = _step2.value;
+            curr_in = _step3.value;
             _context5.next = 9;
             return (0, _cryptoHash.sha256)(curr_in);
 
@@ -636,27 +709,27 @@ function _hashBuilder() {
             _context5.prev = 15;
             _context5.t0 = _context5["catch"](3);
 
-            _iterator2.e(_context5.t0);
+            _iterator3.e(_context5.t0);
 
           case 18:
             _context5.prev = 18;
 
-            _iterator2.f();
+            _iterator3.f();
 
             return _context5.finish(18);
 
           case 21:
-            _iterator3 = _createForOfIteratorHelper(inputsToNotHash);
+            _iterator4 = _createForOfIteratorHelper(inputsToNotHash);
 
             try {
-              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-                _curr_in = _step3.value;
+              for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+                _curr_in = _step4.value;
                 final_string += _curr_in;
               }
             } catch (err) {
-              _iterator3.e(err);
+              _iterator4.e(err);
             } finally {
-              _iterator3.f();
+              _iterator4.f();
             }
 
             return _context5.abrupt("return", final_string);

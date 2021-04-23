@@ -168,6 +168,49 @@ async function _getLocationInformation(lat, lon) {
     } catch (e) { return {} }
 }
 
+
+export function transformForDB(initialObj, mongoColTypesArr) {
+    let accessorToTypeMap = mongoColTypesArr.reduce((a, key) => Object.assign(a, { [key.column_accessor]: key.column_type }), {});
+
+    const convertToDefault = (val, easybaseType) => {
+        switch (easybaseType) {
+            case "time":
+                return convertMinsToHrsMins24(val);
+            case "boolean":
+                return val;
+            case "file":
+            case "number":
+            case "video":
+            case "image":
+            case "text":
+                return val;
+            case "richtext":
+                return val;
+            case "date":
+                return val;
+            case 'location':
+                return val.coordinates;
+            default:
+                break;
+        }
+    }
+    if (isArray(initialObj)) {
+        for (const currRecord of initialObj) {
+            for (const [currKey, currValue] of Object.entries(currRecord)) {
+                if (currValue !== null && currKey !== "_id") currRecord[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+            }
+            delete currRecord._id;
+            delete currRecord._position;
+        }
+    } else {
+        for (const [currKey, currValue] of Object.entries(initialObj)) {
+            if (currValue !== null && currKey !== "_id") initialObj[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+        }
+        delete initialObj._id;
+        delete initialObj._position;
+    }
+}
+
 export async function transformValueToDefault(initialValue, easybaseType) {
     switch (easybaseType) {
         case "time":
