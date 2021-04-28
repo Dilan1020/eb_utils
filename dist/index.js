@@ -313,7 +313,11 @@ function setDefaultValues(initialObj, mongoColTypesArr) {
               currKey = _Object$entries$_i[0],
               currValue = _Object$entries$_i[1];
 
-          if (currValue !== null && currKey !== "_id") currRecord[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+          if (currKey === "_id") {
+            currRecord._key = currValue;
+          } else if (currValue !== null) {
+            currRecord[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+          }
         }
 
         delete currRecord._id;
@@ -330,7 +334,11 @@ function setDefaultValues(initialObj, mongoColTypesArr) {
           _currKey = _Object$entries2$_i[0],
           _currValue = _Object$entries2$_i[1];
 
-      if (_currValue !== null && _currKey !== "_id") initialObj[_currKey] = convertToDefault(_currValue, accessorToTypeMap[_currKey]);
+      if (_currKey === "_id") {
+        initialObj._key = _currValue;
+      } else if (_currValue !== null) {
+        initialObj[_currKey] = convertToDefault(_currValue, accessorToTypeMap[_currKey]);
+      }
     }
 
     delete initialObj._id;

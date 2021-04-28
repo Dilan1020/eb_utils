@@ -197,14 +197,22 @@ export function setDefaultValues(initialObj, mongoColTypesArr) {
     if (isArray(initialObj)) {
         for (const currRecord of initialObj) {
             for (const [currKey, currValue] of Object.entries(currRecord)) {
-                if (currValue !== null && currKey !== "_id") currRecord[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+                if (currKey === "_id") {
+                    currRecord._key = currValue;
+                } else if (currValue !== null) {
+                    currRecord[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+                }
             }
             delete currRecord._id;
             delete currRecord._position;
         }
     } else {
         for (const [currKey, currValue] of Object.entries(initialObj)) {
-            if (currValue !== null && currKey !== "_id") initialObj[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+            if (currKey === "_id") {
+                initialObj._key = currValue;
+            } else if (currValue !== null) {
+                initialObj[currKey] = convertToDefault(currValue, accessorToTypeMap[currKey]);
+            }
         }
         delete initialObj._id;
         delete initialObj._position;
