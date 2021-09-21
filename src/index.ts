@@ -25,6 +25,7 @@ export const clearArray = (arr: any[]) => {
     return arr;
 }
 
+// https://stackoverflow.com/a/43467144
 export function isValidHttpUrl(string: string) {
     let url;
 
@@ -68,6 +69,8 @@ export const checkStringForDatabase = (potential_name: string) => {
         return "Cannot have name 'Order'";
     if (potential_name.trim().toUpperCase() === 'JUSTCOLUMNS')
         return "Cannot have name 'JustColumns'";
+    if (potential_name.trim().toUpperCase() === 'DATE')
+        return "Cannot have name 'Date'";
     if (!isNaN(parseFloat(potential_name.trim())) && isFinite(+(potential_name.trim())))
         return "Cannot have numeric name"
     else return true;
@@ -117,7 +120,6 @@ export function convertToType(initialValue: any, easybaseType: any) {
 }
 
 export function convertTimeHHMMToMinutes(timeString: string) {
-
     const durArr = timeString.split(':');
     const hours = Number(durArr[0].match(/\d+/));
     const mintues = Number(durArr[1].match(/\d+/));
