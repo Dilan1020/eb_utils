@@ -10,6 +10,7 @@ import isArray from 'lodash/isArray';
 import { sha256 } from 'crypto-hash';
 import axios from 'axios';
 import { Db } from 'mongodb';
+import reservedWords from './reserved';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
 
@@ -44,36 +45,56 @@ export const shallowCompare = (obj1: Record<string, any>, obj2: Record<string, a
         Object.prototype.hasOwnProperty.call(obj2, key) && obj1[key] === obj2[key]
     );
 
-export const alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,40}$/ // Alhpanumber, allowing for spaces and hyphens
+export const alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,40}$/ // Alphanumber, allowing for spaces and hyphens
 
-export const checkStringForDatabase = (potential_name: string) => {
-    if (potential_name.includes("_"))
+export const isValidTableName = (potential_name: string) => {
+    const normalizedName = potential_name.trim().toUpperCase();
+
+    if (normalizedName.includes("_"))
         return "Cannot have '_' in name, use '-' instead";
-    if (potential_name.trim() === '')
+    if (normalizedName === '')
         return "Cannot have empty name";
-    if (potential_name.length > 40)
+    if (normalizedName.length > 40)
         return "Names cannot be longer 40 characters"
     if (!alphanumericWithSpaceHyphen.test(potential_name))
         return "Names can only contain a-Z, 0-9, ' ', -";
-    if (potential_name.trim().toUpperCase() === 'CHECKBOX')
+    if (normalizedName === 'CHECKBOX')
         return "Cannot have name 'Checkbox'";
-    if (potential_name.trim().toUpperCase() === 'LIMIT')
-        return "Cannot have name 'Limit'";
-    if (potential_name.trim().toUpperCase() === 'OFFSET')
-        return "Cannot have name 'Offset'";
-    if (potential_name.trim().toUpperCase() === 'INSERTATEND')
-        return "Cannot have name 'INSERTATEND'";
-    if (potential_name.trim().toUpperCase() === 'SEARCHSTRING')
-        return "Cannot have name 'SearchString'";
-    if (potential_name.trim().toUpperCase() === 'ORDER')
-        return "Cannot have name 'Order'";
-    if (potential_name.trim().toUpperCase() === 'JUSTCOLUMNS')
+    if (normalizedName === 'JUSTCOLUMNS')
         return "Cannot have name 'JustColumns'";
-    if (potential_name.trim().toUpperCase() === 'DATE')
-        return "Cannot have name 'Date'";
-    if (!isNaN(parseFloat(potential_name.trim())) && isFinite(+(potential_name.trim())))
-        return "Cannot have numeric name"
-    else return true;
+    if (normalizedName === 'INSERTATEND')
+        return "Cannot have name 'INSERTATEND'";
+    if (normalizedName === 'SEARCHSTRING')
+        return "Cannot have name 'SearchString'";
+    else
+        return true;
+}
+
+export const isValidColumnName = (potential_name: string) => {
+    const normalizedName = potential_name.trim().toUpperCase();
+
+    if (normalizedName.includes("_"))
+        return "Cannot have '_' in name, use '-' instead";
+    if (normalizedName === '')
+        return "Cannot have empty name";
+    if (normalizedName.length > 40)
+        return "Names cannot be longer 40 characters"
+    if (!alphanumericWithSpaceHyphen.test(potential_name))
+        return "Names can only contain a-Z, 0-9, ' ', -";
+    if (normalizedName === 'CHECKBOX')
+        return "Cannot have name 'Checkbox'";
+    if (normalizedName === 'INSERTATEND')
+        return "Cannot have name 'INSERTATEND'";
+    if (normalizedName === 'SEARCHSTRING')
+        return "Cannot have name 'SearchString'";
+    if (normalizedName === 'JUSTCOLUMNS')
+        return "Cannot have name 'JustColumns'";
+    if (!isNaN(parseFloat(normalizedName)) && isFinite(+(normalizedName)))
+        return "Cannot have numeric name";
+    if (Object.values(reservedWords).includes(normalizedName))
+        return `Cannot have reserved database keyword: ${normalizedName}`;
+    else
+        return true;
 }
 
 export function convertToType(initialValue: any, easybaseType: any) {
