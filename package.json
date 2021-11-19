@@ -1,8 +1,7 @@
 {
   "name": "eb-utils",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "",
-  "type": "module",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
