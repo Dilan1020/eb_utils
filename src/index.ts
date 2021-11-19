@@ -14,7 +14,7 @@ import reservedWords from './reserved';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
 
-export const pullNumberFromString = (in_str: string) => isString(in_str) ? Number(in_str.replace(/\D/g, "")) : 0;
+export const pullNumberFromString = (in_str: string) => isString(in_str) ? Number(in_str.replace(/[^0-9\.]+/g, "")) : 0;
 
 export const clearObject = (obj: Record<string, any>) => {
     Object.keys(obj).forEach(k => delete obj[k]);
