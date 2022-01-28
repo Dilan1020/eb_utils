@@ -46,7 +46,7 @@ export const shallowCompare = (obj1: Record<string, any>, obj2: Record<string, a
     );
 
 export const alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,40}$/ // Alphanumber, allowing for spaces and hyphens
-export const alphanumericWithUnderscoreSafeStart = /^[a-zA-Z_]([A-Za-z0-9_])$/;
+export const alphanumericWithUnderscoreSafeStart = /^[a-zA-Z_]([A-Za-z0-9_]){0,100}$/;
 
 export const isValidTableName = (potential_name: string) => {
     const normalizedName = potential_name.trim().toUpperCase();
