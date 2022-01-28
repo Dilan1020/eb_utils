@@ -9,8 +9,8 @@ import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 import { sha256 } from 'crypto-hash';
 import axios from 'axios';
-import { Db } from 'mongodb';
 import reservedWords from './reserved';
+import type { Db } from 'mongodb';
 
 try { dayjs.utc().isUTC(); } catch (e) { dayjs.extend(utc); }
 
@@ -46,6 +46,7 @@ export const shallowCompare = (obj1: Record<string, any>, obj2: Record<string, a
     );
 
 export const alphanumericWithSpaceHyphen = /^([-A-Za-z0-9 ]){0,40}$/ // Alphanumber, allowing for spaces and hyphens
+export const alphanumericWithUnderscoreSafeStart = /^[a-zA-Z_]([A-Za-z0-9_])$/;
 
 export const isValidTableName = (potential_name: string) => {
     const normalizedName = potential_name.trim().toUpperCase();
@@ -93,6 +94,23 @@ export const isValidColumnName = (potential_name: string) => {
         return "Cannot have numeric name";
     if (Object.values(reservedWords).includes(normalizedName))
         return `Cannot have reserved database keyword: ${normalizedName}`;
+    else
+        return true;
+}
+
+export const isValidNamev2 = (potential_name: string) => {
+    const normalizedName = potential_name.trim().toUpperCase();
+
+    if (normalizedName === '')
+        return "Cannot have empty name";
+    if (normalizedName.length > 100)
+        return "Names cannot be longer 100 characters"
+    if (!alphanumericWithUnderscoreSafeStart.test(potential_name))
+        return "Names can only contain a-Z, 0-9, '_' and must start with a-Z";
+    if (normalizedName.charAt(0) === '_')
+        return "Names cannot begin with '_'";
+    if (!isNaN(parseFloat(normalizedName)) && isFinite(+(normalizedName)))
+        return "Cannot have numeric name";
     else
         return true;
 }
